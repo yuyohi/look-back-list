@@ -3,8 +3,10 @@ package task
 import "fmt"
 
 type TimeMinute int
+type TaskId string
 
 type Task struct {
+	TaskId        TaskId
 	Title         string
 	Detail        string
 	EstimatedTime TimeMinute
@@ -12,12 +14,12 @@ type Task struct {
 	IsDone        bool
 }
 
-func (i *Task) Do() error {
-	if i.IsDone {
+func (t *Task) Do() error {
+	if t.IsDone {
 		return fmt.Errorf("既に達成されたタスクを達成することはできません")
 	}
 
-	i.IsDone = true
+	t.IsDone = true
 
 	return nil
 }
