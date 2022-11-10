@@ -1,6 +1,9 @@
-package task
+package domain
 
-import "fmt"
+import (
+	"fmt"
+	"time"
+)
 
 type TimeMinute int
 type TaskId string
@@ -12,6 +15,7 @@ type Task struct {
 	EstimatedTime TimeMinute
 	ActualTime    TimeMinute
 	IsDone        bool
+	CreatedAt     time.Time
 }
 
 func (t *Task) Do() error {
