@@ -6,16 +6,16 @@ import (
 	"github.com/yuyohi/look-back-list/domain"
 )
 
-type TaskRepositorySQL struct {
+type TaskRepositoryImpl struct {
 	db *sql.DB
 }
 
 // コンストラクタ
-func NewTaskRepositoryMySQL(db *sql.DB) *TaskRepositorySQL {
-	return &TaskRepositorySQL{db: db}
+func NewTaskRepositoryMySQL(db *sql.DB) *TaskRepositoryImpl {
+	return &TaskRepositoryImpl{db: db}
 }
 
-func (r *TaskRepositorySQL) Store(task domain.Task) error {
+func (r *TaskRepositoryImpl) Store(task domain.Task) error {
 	const sqlStr = `
 		INSERT INTO tasks (id, title, detail, estimated_time, actual_time, is_done, created_at) values
 		(?, ?, ?, ?, ?, ?);
@@ -30,7 +30,7 @@ func (r *TaskRepositorySQL) Store(task domain.Task) error {
 	return nil
 }
 
-func (r *TaskRepositorySQL) FindById(id domain.TaskId) (domain.Task, error) {
+func (r *TaskRepositoryImpl) FindById(id domain.TaskId) (domain.Task, error) {
 	const sqlStr = `
 		SELECT *
 		FROM tasks
@@ -51,7 +51,7 @@ func (r *TaskRepositorySQL) FindById(id domain.TaskId) (domain.Task, error) {
 	return task, nil
 }
 
-func (r *TaskRepositorySQL) DeleteById(id domain.TaskId) error {
+func (r *TaskRepositoryImpl) DeleteById(id domain.TaskId) error {
 	const sqlStr = `
 	DELETE FROM tasks 
 	WHERE id = ?
