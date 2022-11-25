@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS tasks (
+CREATE TABLE IF NOT EXISTS issue (
     `id` VARCHAR(32) NOT NULL, -- 後々user_idを追加し、外部keyにする
     `title` TEXT NOT NULL,
     `detail` TEXT NOT NULL,

@@ -1,4 +1,4 @@
-package mysql_test
+package rdb_test
 
 import (
 	"database/sql"
@@ -8,9 +8,12 @@ import (
 	"testing"
 
 	"github.com/go-sql-driver/mysql"
+	"github.com/yuyohi/look-back-list/infra/rdb"
 )
 
 var testDB *sql.DB
+
+var tRepo *rdb.IssueRepositoryImpl
 
 var dbConn = mysql.Config{
 	DBName:               "sampledb",
@@ -80,6 +83,8 @@ func TestMain(m *testing.M) {
 	if err != nil {
 		os.Exit(1)
 	}
+
+	tRepo = rdb.NewIssueRepositoryMySQL(testDB)
 
 	m.Run()
 
