@@ -1,3 +1,3 @@
 package user
 
-type UserId string
+type UserID string

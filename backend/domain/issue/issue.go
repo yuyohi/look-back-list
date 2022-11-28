@@ -18,25 +18,25 @@ func NewTimeMinute(value int) (TimeMinute, error) {
 	return TimeMinute(value), nil
 }
 
-type IssueId util.Identifier
+type IssueID util.Identifier
 
-func GenerateIssueId() IssueId {
-	id := IssueId(util.IDGenerator.Generate())
+func GenerateIssueID() IssueID {
+	id := IssueID(util.IDGenerator.Generate())
 	return id
 }
 
-func NewIssueId(idStr string) IssueId {
-	id := IssueId(util.NewIdentifier(idStr))
+func NewIssueID(idStr string) IssueID {
+	id := IssueID(util.NewIdentifier(idStr))
 	return id
 }
 
-func (i IssueId) Value() string {
+func (i IssueID) Value() string {
 	return util.Identifier(i).Value()
 }
 
 type Issue struct {
-	IssueId       IssueId
-	UserId        user.UserId
+	IssueID       IssueID
+	UserID        user.UserID
 	Title         string
 	Detail        string
 	EstimatedTime TimeMinute
@@ -45,7 +45,7 @@ type Issue struct {
 	CreatedAt     time.Time
 }
 
-func NewIssue(title string, userId user.UserId, detail string, estimatedTimeInt int, createAt time.Time) (*Issue, error) {
+func NewIssue(title string, userID user.UserID, detail string, estimatedTimeInt int, createAt time.Time) (*Issue, error) {
 
 	estimatedTime, err := NewTimeMinute(estimatedTimeInt)
 	if err != nil {
@@ -53,8 +53,8 @@ func NewIssue(title string, userId user.UserId, detail string, estimatedTimeInt 
 	}
 
 	issue := Issue{
-		IssueId:       GenerateIssueId(),
-		UserId:        userId,
+		IssueID:       GenerateIssueID(),
+		UserID:        userID,
 		Title:         title,
 		Detail:        detail,
 		EstimatedTime: estimatedTime,
@@ -65,15 +65,15 @@ func NewIssue(title string, userId user.UserId, detail string, estimatedTimeInt 
 	return &issue, nil
 }
 
-func ReconstructIssue(idStr string, userIdStr string, title string, detail string, estimatedTime int, actualTime int, isDone bool, createdAt time.Time) *Issue {
-	issueId := NewIssueId(idStr)
-	userId := user.UserId(userIdStr)
+func ReconstructIssue(idStr string, userIDStr string, title string, detail string, estimatedTime int, actualTime int, isDone bool, createdAt time.Time) *Issue {
+	issueID := NewIssueID(idStr)
+	userID := user.UserID(userIDStr)
 	et, _ := NewTimeMinute(estimatedTime)
 	at, _ := NewTimeMinute(actualTime)
 
 	issue := Issue{
-		IssueId:       issueId,
-		UserId:        userId,
+		IssueID:       issueID,
+		UserID:        userID,
 		Title:         title,
 		Detail:        detail,
 		EstimatedTime: et,
