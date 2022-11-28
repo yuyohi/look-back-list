@@ -4,6 +4,7 @@ import (
 	"database/sql"
 
 	issue_domain "github.com/yuyohi/look-back-list/domain/issue"
+	user_domain "github.com/yuyohi/look-back-list/domain/user"
 )
 
 type IssueRepositoryImpl struct {
@@ -54,13 +55,41 @@ func (r *IssueRepositoryImpl) FindByID(id issue_domain.IssueID) (issue_domain.Is
 	return *issue, nil
 }
 
+func (r *IssueRepositoryImpl) FindByUserID(userID user_domain.UserID) ([]issue_domain.Issue, error) {
+	const sqlStr = `
+	SELECT *
+	FROM issue
+	WHERE user_id = ?;
+	`
+
+	rows, err := r.db.Query(sqlStr, string(userID))
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	issues := make([]issue_domain.Issue, 0)
+	for rows.Next() {
+		var issueTable issueTable
+		err := rows.Scan(&issueTable.IssueID, &issueTable.userID, &issueTable.Title, &issueTable.Detail, &issueTable.EstimatedTime, &issueTable.ActualTime, &issueTable.IsDone, &issueTable.CreatedAt)
+
+		if err != nil {
+			return nil, err
+		}
+
+		issues = append(issues, *issueTable.toDomain())
+	}
+
+	return issues, nil
+}
+
 func (r *IssueRepositoryImpl) DeleteByID(id issue_domain.IssueID) error {
 	const sqlStr = `
 	DELETE FROM issue 
 	WHERE id = ?
 	`
 
-	_, err := r.db.Exec(sqlStr, id)
+	_, err := r.db.Exec(sqlStr, id.Value())
 	if err != nil {
 		return err
 	}
