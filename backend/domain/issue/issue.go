@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/yuyohi/look-back-list/domain/user"
 	"github.com/yuyohi/look-back-list/util"
 )
 
@@ -35,6 +36,7 @@ func (i IssueId) Value() string {
 
 type Issue struct {
 	IssueId       IssueId
+	UserId        user.UserId
 	Title         string
 	Detail        string
 	EstimatedTime TimeMinute
@@ -43,7 +45,7 @@ type Issue struct {
 	CreatedAt     time.Time
 }
 
-func NewIssue(title string, detail string, estimatedTimeInt int, createAt time.Time) (*Issue, error) {
+func NewIssue(title string, userId user.UserId, detail string, estimatedTimeInt int, createAt time.Time) (*Issue, error) {
 
 	estimatedTime, err := NewTimeMinute(estimatedTimeInt)
 	if err != nil {
@@ -51,30 +53,33 @@ func NewIssue(title string, detail string, estimatedTimeInt int, createAt time.T
 	}
 
 	issue := Issue{
-		IssueId: GenerateIssueId(),
-		Title: title,
-		Detail: detail,
+		IssueId:       GenerateIssueId(),
+		UserId:        userId,
+		Title:         title,
+		Detail:        detail,
 		EstimatedTime: estimatedTime,
-		IsDone: false,
-		CreatedAt: createAt,
+		IsDone:        false,
+		CreatedAt:     createAt,
 	}
 
 	return &issue, nil
 }
 
-func ReconstructIssue(idStr string, title string, detail string, estimatedTime int, actualTime int, isDone bool, createdAt time.Time) *Issue {
+func ReconstructIssue(idStr string, userIdStr string, title string, detail string, estimatedTime int, actualTime int, isDone bool, createdAt time.Time) *Issue {
 	issueId := NewIssueId(idStr)
+	userId := user.UserId(userIdStr)
 	et, _ := NewTimeMinute(estimatedTime)
 	at, _ := NewTimeMinute(actualTime)
 
 	issue := Issue{
-		IssueId: issueId,
-		Title: title,
-		Detail: detail,
+		IssueId:       issueId,
+		UserId:        userId,
+		Title:         title,
+		Detail:        detail,
 		EstimatedTime: et,
-		ActualTime: at,
-		IsDone: false,
-		CreatedAt: createdAt,
+		ActualTime:    at,
+		IsDone:        false,
+		CreatedAt:     createdAt,
 	}
 
 	return &issue
