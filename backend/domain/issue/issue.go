@@ -8,11 +8,29 @@ import (
 )
 
 type TimeMinute int
+
+func NewTimeMinute(value int) (TimeMinute, error) {
+	if value < 0 {
+		return TimeMinute(0), fmt.Errorf("TimeMinuteは0以上である必要があります")
+	}
+
+	return TimeMinute(value), nil
+}
+
 type IssueId util.Identifier
 
-func NewIssueId() *IssueId {
+func GenerateIssueId() IssueId {
 	id := IssueId(util.IDGenerator.Generate())
-	return &id
+	return id
+}
+
+func NewIssueId(idStr string) IssueId {
+	id := IssueId(util.NewIdentifier(idStr))
+	return id
+}
+
+func (i IssueId) Value() string {
+	return util.Identifier(i).Value()
 }
 
 type Issue struct {
@@ -25,26 +43,36 @@ type Issue struct {
 	CreatedAt     time.Time
 }
 
-func NewIssue(title string, detail string, estimatedTime TimeMinute, createAt time.Time) *Issue {
+func NewIssue(title string, detail string, estimatedTimeInt int, createAt time.Time) (*Issue, error) {
+
+	estimatedTime, err := NewTimeMinute(estimatedTimeInt)
+	if err != nil {
+		return nil, err
+	}
 
 	issue := Issue{
-		IssueId: *NewIssueId(),
+		IssueId: GenerateIssueId(),
 		Title: title,
 		Detail: detail,
 		EstimatedTime: estimatedTime,
 		IsDone: false,
-		CreatedAt: time.Now(),
+		CreatedAt: createAt,
 	}
 
-	return &issue
+	return &issue, nil
 }
 
-func ReconstructIssue(issueId IssueId, title string, detail string, estimatedTime TimeMinute, createAt time.Time, isDone bool, createdAt time.Time) *Issue {
+func ReconstructIssue(idStr string, title string, detail string, estimatedTime int, actualTime int, isDone bool, createdAt time.Time) *Issue {
+	issueId := NewIssueId(idStr)
+	et, _ := NewTimeMinute(estimatedTime)
+	at, _ := NewTimeMinute(actualTime)
+
 	issue := Issue{
 		IssueId: issueId,
 		Title: title,
 		Detail: detail,
-		EstimatedTime: estimatedTime,
+		EstimatedTime: et,
+		ActualTime: at,
 		IsDone: false,
 		CreatedAt: createdAt,
 	}

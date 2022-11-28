@@ -17,6 +17,12 @@ type IdentifierGenerator interface {
 	Generate() Identifier
 }
 
+func NewIdentifier(id string) Identifier {
+	return Identifier{
+		identifier: id,
+	}
+}
+
 func GenerateIdentifier() Identifier {
 	return IDGenerator.Generate()
 }
