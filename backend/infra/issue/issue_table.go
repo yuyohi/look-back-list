@@ -7,7 +7,8 @@ import (
 )
 
 type issueTable struct {
-	IssueId       string
+	IssueID       string
+	userID        string
 	Title         string
 	Detail        string
 	EstimatedTime int
@@ -17,13 +18,14 @@ type issueTable struct {
 }
 
 func (i issueTable) toDomain() *issue_domain.Issue {
-	issue := issue_domain.ReconstructIssue(i.IssueId, i.Title, i.Detail, i.EstimatedTime, i.ActualTime, i.IsDone, i.CreatedAt)
+	issue := issue_domain.ReconstructIssue(i.IssueID, i.userID, i.Title, i.Detail, i.EstimatedTime, i.ActualTime, i.IsDone, i.CreatedAt)
 	return issue
 }
 
 func fromDomain(i issue_domain.Issue) *issueTable {
 	return &issueTable{
-		IssueId: i.IssueId.Value(),
+		IssueID: i.IssueID.Value(),
+		userID: string(i.UserID),
 		Title: i.Title,
 		Detail: i.Detail,
 		EstimatedTime: int(i.EstimatedTime),
