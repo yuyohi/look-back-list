@@ -39,6 +39,19 @@ func NewIssue(title string, detail string, estimatedTime TimeMinute, createAt ti
 	return &issue
 }
 
+func ReconstructIssue(issueId IssueId, title string, detail string, estimatedTime TimeMinute, createAt time.Time, isDone bool, createdAt time.Time) *Issue {
+	issue := Issue{
+		IssueId: issueId,
+		Title: title,
+		Detail: detail,
+		EstimatedTime: estimatedTime,
+		IsDone: false,
+		CreatedAt: createdAt,
+	}
+
+	return &issue
+}
+
 func (t *Issue) Do() error {
 	if t.IsDone {
 		return fmt.Errorf("既に達成されたタスクを達成することはできません")
